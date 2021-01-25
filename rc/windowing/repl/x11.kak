@@ -21,12 +21,14 @@ define-command -docstring %{
     } -- %val{client} %val{session} %arg{@}
 }
 
-define-command x11-send-text -params 0..1 -docstring %{
+define-command x11-send-text -params 0..2 -docstring %{
         x11-send-text [text]: Send text to the REPL window.
         If no text is passed, then the selection is used
         } %{
     evaluate-commands %sh{
-        ([ "$#" -gt 0 ] && printf "%s\\n" "$1" || printf "%s\\n" "${kak_selection}" ) | xsel -i ||
+        FORMAT="%s\\n"
+        [ "$#" -gt 1 ] && [ "$2" = "0" ] && FORMAT="%s"
+        (([ "$#" -gt 0 ] && [ "$1" != "" ]) && printf "$FORMAT" "$1" || printf "$FORMAT" "${kak_selection}" ) | xsel -i ||
         echo 'fail x11-send-text: failed to run xsel, see *debug* buffer for details' &&
         kak_winid=$(xdotool getactivewindow) &&
         xdotool windowactivate "${kak_opt_x11_repl_id}" key --clearmodifiers Shift+Insert &&

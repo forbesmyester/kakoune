@@ -21,7 +21,7 @@ define-command -params .. -shell-completion \
     }
 }
 
-define-command -hidden -params 0..1 \
+define-command -hidden -params 0..2 \
     -docstring %{
         kitty-send-text [text]: Send text to the REPL window.
 
@@ -29,12 +29,16 @@ define-command -hidden -params 0..1 \
     } \
     kitty-send-text %{
     nop %sh{
-        if [ $# -eq 0 ]; then
+        if [ $# -eq 0 ] || [ "$1" = "" ]; then
             text="$kak_selection"
         else
             text="$1"
         fi
-        kitty @ send-text -m=title:kak_repl_window "$text"
+        if [ "$#" -gt 1 ] && [ "$2" = "1" ]; then
+            kitty @ send-text -m=title:kak_repl_window "$text\n"
+        else
+            kitty @ send-text -m=title:kak_repl_window "$text"
+        fi
     }
 }
 

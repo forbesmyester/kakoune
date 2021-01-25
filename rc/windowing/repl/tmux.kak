@@ -35,17 +35,20 @@ define-command tmux-repl-window -params 0.. -command-completion -docstring "Crea
     tmux-repl-impl 'new-window' %arg{@}
 }
 
-define-command -hidden tmux-send-text -params 0..1 -docstring %{
+define-command -hidden tmux-send-text -params 0..2 -docstring %{
         tmux-send-text [text]: Send text to the REPL pane.
         If no text is passed, then the selection is used
     } %{
     nop %sh{
-        if [ $# -eq 0 ]; then
+        if [ $# -eq 0 ] || [ "$1" = "" ]; then
             tmux set-buffer -b kak_selection -- "${kak_selection}"
         else
             tmux set-buffer -b kak_selection -- "$1"
         fi
         tmux paste-buffer -b kak_selection -t "$kak_opt_tmux_repl_id"
+        if [ "$#" -gt 1 ] && [ "$2" = "1" ]; then
+            tmux send-keys -t "$kak_opt_tmux_repl_id" "ENTER"
+        fi
     }
 }
 
