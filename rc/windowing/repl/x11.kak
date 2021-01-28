@@ -22,8 +22,10 @@ define-command -docstring %{
 }
 
 define-command x11-send-text -params 0..2 -docstring %{
-        x11-send-text [text]: Send text to the REPL window.
-        If no text is passed, then the selection is used
+        x11-send-text [text] [newline]: Send text to the REPL window.
+
+        If text is not passed or an empty string, the selection is used.
+        If newline is 0 then no new line is appended to what is sent to the repl
         } %{
     evaluate-commands %sh{
         FORMAT="%s\\n"

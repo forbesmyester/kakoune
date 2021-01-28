@@ -23,9 +23,10 @@ define-command -params .. -shell-completion \
 
 define-command -hidden -params 0..2 \
     -docstring %{
-        kitty-send-text [text]: Send text to the REPL window.
+        kitty-send-text [text] [newline]: Send text to the REPL window.
 
-        If no text is passed, the selection is used.
+        If text is not passed or an empty string, the selection is used.
+        If newline is 1 a new line is appended to what is sent to the repl
     } \
     kitty-send-text %{
     nop %sh{

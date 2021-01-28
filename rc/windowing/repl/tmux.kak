@@ -36,8 +36,10 @@ define-command tmux-repl-window -params 0.. -command-completion -docstring "Crea
 }
 
 define-command -hidden tmux-send-text -params 0..2 -docstring %{
-        tmux-send-text [text]: Send text to the REPL pane.
-        If no text is passed, then the selection is used
+        tmux-send-text [text] [newline]: Send text to the REPL pane.
+
+        If text is not passed or an empty string, the selection is used.
+        If newline is 1 a new line is appended to what is sent to the repl
     } %{
     nop %sh{
         if [ $# -eq 0 ] || [ "$1" = "" ]; then
